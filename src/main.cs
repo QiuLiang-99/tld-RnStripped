@@ -10,15 +10,15 @@ namespace ttrRnStripped
 	public static class BuildInfo
 	{
 		public const string Name = "RnStripped"; // Name of the Mod.  (MUST BE SET)
-		public const string Description = "Some functionalyty ported out of Relentless Nighs."; // Description for the Mod.  (Set as null if none)
+		public const string Description = "Some functionality ported out of Relentless Nighs."; // Description for the Mod.  (Set as null if none)
 		public const string Author = "ttr"; // Author of the Mod.  (MUST BE SET)
 		public const string Company = null; // Company that made the Mod.  (Set as null if none)
-		public const string Version = "0.1.0"; // Version of the Mod.  (MUST BE SET)
+		public const string Version = "0.3.0"; // Version of the Mod.  (MUST BE SET)
 		public const string DownloadLink = null; // Download Link for the Mod.  (Set as null if none)
 	}
 	internal class ttrRnStripped : MelonMod
 	{
-		public override void OnApplicationStart()
+		public override void OnInitializeMelon()
 		{
 			Debug.Log($"[{Info.Name}] Version {Info.Version} loaded!");
 			Settings.OnLoad();

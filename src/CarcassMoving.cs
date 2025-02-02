@@ -4,6 +4,7 @@ using UnityEngine;
 using HarmonyLib;
 using Il2CppAK;
 using Il2CppInterop.Runtime.Injection;
+using MelonLoader;
 //using static ttrRnStripped.CarcassMoving;
 
 namespace ttrRnStripped
@@ -236,11 +237,11 @@ namespace ttrRnStripped
 		[HarmonyPatch(typeof(Encumber), nameof(Encumber.GetEncumbranceSlowdownMultiplier))]
 		internal class Encumber_GetEncumbranceSlowdownMultiplier
 		{
-			private static void Postfix(ref float __result)
+			private static void Postfix(Encumber __instance, ref float __result)
 			{
 				if (!Settings.options.carcassMovingEnabled || !isCarryingCarcass) return;
-
-				__result *= Mathf.Clamp((1f - carcassWeight * carryAddedSlowDownPerKilo), 0.1f, 0.8f);
+				__result *= Mathf.Clamp((1f - (carcassWeight + __instance.GetGearWeightKG().ToQuantity(1) - __instance.GetMaxCarryCapacityKG().ToQuantity(1)) * carryAddedSlowDownPerKilo), 0.1f, 0.8f);
+        //Utilities.ModLog(__result.ToString());
 			}
 		}
 		[HarmonyPatch(typeof(Inventory), nameof(Inventory.GetExtraScentIntensity))]
@@ -321,11 +322,7 @@ namespace ttrRnStripped
 		internal static void PickUpCarcass()
 		{
 			isCarryingCarcass = true;
-			carcassWeight = bodyHarvest.m_MeatAvailableKG + bodyHarvest.GetGutsAvailableWeightKg() + bodyHarvest.GetHideAvailableWeightKg();
-			// added for comp for animas mods.
-			if (carcassWeight > 20) {
-				carcassWeight = 20;
-			}
+			carcassWeight = bodyHarvest.m_MeatAvailableKG.ToQuantity(1) + bodyHarvest.GetGutsAvailableWeightKg().ToQuantity(1) + bodyHarvest.GetHideAvailableWeightKg().ToQuantity(1);
 			carcassOriginalScene = GameManager.m_ActiveScene;
 			CarcassMoving carcassMoving = carcassObj.GetComponent<CarcassMoving>();
 			if (carcassMoving == null)
@@ -397,8 +394,9 @@ namespace ttrRnStripped
 		}
 		internal static bool HarvestAmmountsAreSelected(Panel_BodyHarvest __instance)
 		{
-			return (__instance.m_MenuItem_Meat.m_HarvestAmount > 0f || __instance.m_MenuItem_Hide.m_HarvestAmount > 0f || __instance.m_MenuItem_Gut.m_HarvestAmount > 0f);
+			return (__instance.m_MenuItem_Meat.HarvestUnitsAvailable > 0f || __instance.m_MenuItem_Hide.HarvestUnitsAvailable > 0f || __instance.m_MenuItem_Gut.HarvestUnitsAvailable > 0f);
 		}
+    
 		internal static bool StopErrorDueToCarcassBeingFrozen(Panel_BodyHarvest panelBodyHarvest)
 		{
 			if (panelBodyHarvest != null)

@@ -1,4 +1,5 @@
 // https://raw.githubusercontent.com/ShieldHeart1/RelentlessNight/master/Gameplay/ElectricTorchLighting.cs
+// i do not know if this even works ;) 
 
 using HarmonyLib;
 using Il2CppTLD.Interactions;

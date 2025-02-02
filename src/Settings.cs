@@ -12,7 +12,7 @@ namespace ttrRnStripped
         public bool carcassMovingEnabled = true;
 
         [Name("Electric Torch Lighting")]
-        [Description("Add ability to light torches using live wires and household outlets during auroras.")]
+        [Description("Add ability to light torches using live wires and household outlets during auroras.\n\nUntested - let me know if this still works.")]
         public bool electricTorchLightingEnabled = true;
     }
     internal static class Settings
