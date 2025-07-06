@@ -54,22 +54,22 @@ namespace ttrRnStripped
 
 				if (Settings.options.carcassMovingEnabled)
 				{
-					if (IsMovableCarcass(bh) && !isCarryingCarcass)
+					if (IsMovableCarcass(bh))
 					{
 						bodyHarvest = bh;
 						carcassObj = bh.gameObject;
-
 						if (moveCarcassBtnObj == null)
 						{
-							AddCarcassMoveButton(__instance);
+							CreateCarcassMoveButton(__instance);
+						}
+						if (moveCarcassBtnObj.activeSelf != true){
+							moveCarcassBtnObj.SetActive(true);
 						}
 					} else
 					{
-						// extra check to remove carcass move button
-						// would appear if you select a valid carcass and then open screen on an invalid one.
-						if (moveCarcassBtnObj != null)
+						if (moveCarcassBtnObj.activeSelf != false)
 						{
-							RemoveCarcassMoveButton(__instance);
+							moveCarcassBtnObj.SetActive(false);
 						}
 					}
 				}
@@ -286,22 +286,27 @@ namespace ttrRnStripped
 				}
 			}
 		}
-		internal static void AddCarcassMoveButton(Panel_BodyHarvest panelBodyHarvest)
+		internal static void CreateCarcassMoveButton(Panel_BodyHarvest panelBodyHarvest)
 		{
 			moveCarcassBtnObj = Instantiate(panelBodyHarvest.m_Mouse_Button_Harvest, panelBodyHarvest.m_Mouse_Button_Harvest.transform);
 			moveCarcassBtnObj.GetComponentInChildren<UILocalize>().key = "MOVE CARCASS";
-
-			panelBodyHarvest.m_Mouse_Button_Harvest.transform.localPosition += new Vector3(-100f, 0f, 0f);
-			moveCarcassBtnObj.transform.localPosition = new Vector3(+200f, 0f, 0f);
-
 			UIButton moveCarcassButton = moveCarcassBtnObj.GetComponentInChildren<UIButton>();
 			moveCarcassButton.onClick.Clear();
 			moveCarcassButton.onClick.Add(new EventDelegate(new Action(OnMoveCarcass)));
+			panelBodyHarvest.m_Mouse_Button_Harvest.transform.localPosition += new Vector3(-100f, 0f, 0f);
+			moveCarcassBtnObj.transform.localPosition = new Vector3(+200f, 0f, 0f);		
 		}
 		internal static void RemoveCarcassMoveButton(Panel_BodyHarvest panelBodyHarvest)
 		{
-			DestroyImmediate(moveCarcassBtnObj);
-			panelBodyHarvest.m_Mouse_Button_Harvest.transform.localPosition += new Vector3(+100f, 0f, 0f);
+			if (moveCarcassBtnObj != null)
+			{
+				if (moveCarcassBtnObj.activeSelf != false)
+				{
+					moveCarcassBtnObj.SetActive(false);
+				}
+				////DestroyImmediate(moveCarcassBtnObj);
+				////panelBodyHarvest.m_Mouse_Button_Harvest.transform.localPosition += new Vector3(+100f, 0f, 0f);
+			}
 		}
 		internal static bool IsMovableCarcass(BodyHarvest bodyHarvest)
 		{
