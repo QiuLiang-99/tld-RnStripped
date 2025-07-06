@@ -54,14 +54,15 @@ namespace ttrRnStripped
 
 				if (Settings.options.carcassMovingEnabled)
 				{
+					if (moveCarcassBtnObj == null)
+					{
+						CreateCarcassMoveButton(__instance);
+					}					
 					if (IsMovableCarcass(bh))
 					{
 						bodyHarvest = bh;
 						carcassObj = bh.gameObject;
-						if (moveCarcassBtnObj == null)
-						{
-							CreateCarcassMoveButton(__instance);
-						}
+
 						if (moveCarcassBtnObj.activeSelf != true){
 							moveCarcassBtnObj.SetActive(true);
 						}
